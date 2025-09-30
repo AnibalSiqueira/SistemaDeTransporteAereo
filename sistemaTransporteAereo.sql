@@ -258,6 +258,31 @@ BEGIN
 END//
 DELIMITER ;
 
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_alteraTripulacao
+DROP PROCEDURE IF EXISTS `proc_alteraTripulacao`;
+DELIMITER //
+CREATE PROCEDURE `proc_alteraTripulacao`(
+	IN `codAlterar` INT,
+	IN `alteraTipoTripulante` VARCHAR(45),
+	IN `alteraLicenca` VARCHAR(45),
+	IN `alteraValidade_licenca` DATE,
+	IN `alteraHoras_voadas` DOUBLE,
+	IN `alteraCertificacoes` VARCHAR(45)
+)
+BEGIN
+	SELECT COUNT(*) 
+	INTO @existe FROM tb_tripulacao WHERE id_tripulacao = codAlterar;
+	if (@existe)
+		then UPDATE tb_tripulacao SET tipoTripulante = alteraTipoTripulante, licenca = alteraLicenca, validade_licenca = alteraValidade_licenca, horas_voadas = alteraHoras_voadas,
+		 certificacoes = alteraCertificacoes
+		 WHERE id_tripulacao = codAlterar;
+		ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Tripulação inexistente"; 
+	END if;
+	
+	SELECT * FROM tb_tripulacao;
+END//
+DELIMITER ;
+
 -- Copiando estrutura para procedure sistemadetransporteaereo.proc_alteraVoos
 DROP PROCEDURE IF EXISTS `proc_alteraVoos`;
 DELIMITER //
@@ -278,6 +303,203 @@ BEGIN
 	END if;
 	
 	SELECT * FROM tb_voos;
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_apagaAeroporto
+DROP PROCEDURE IF EXISTS `proc_apagaAeroporto`;
+DELIMITER //
+CREATE PROCEDURE `proc_apagaAeroporto`(
+	IN `codApaga` INT
+)
+BEGIN
+	
+	SELECT COUNT(*) INTO @existe FROM tb_aeroportos WHERE id_aeroporto = codApaga;
+	
+	if(@existe)
+		then
+			DELETE FROM tb_aeroportos WHERE id_aeroporto = codApaga;
+		ELSE
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Código inexistente";
+	END if;
+	
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_apagaAvioes
+DROP PROCEDURE IF EXISTS `proc_apagaAvioes`;
+DELIMITER //
+CREATE PROCEDURE `proc_apagaAvioes`(
+	IN `codApaga` INT
+)
+BEGIN
+	
+	SELECT COUNT(*) INTO @existe FROM tb_avioes WHERE id_avioes = codApaga;
+	
+	if(@existe)
+		then
+			DELETE FROM tb_avioes WHERE id_avioes = codApaga;
+		ELSE
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Código inexistente";
+	END if;
+	
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_apagaCompainhaAerea
+DROP PROCEDURE IF EXISTS `proc_apagaCompainhaAerea`;
+DELIMITER //
+CREATE PROCEDURE `proc_apagaCompainhaAerea`(
+	IN `codApaga` INT
+)
+BEGIN
+
+	SELECT COUNT(*) INTO @existe FROM tb_companhiaaerea WHERE id_companhiaaerea = codApaga;
+	
+	if(@existe)
+		then
+			DELETE FROM tb_companhiaaerea WHERE id_companhiaaerea = codApaga;
+		ELSE
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Código inexistente";
+	END if;
+
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_apagaFabricante
+DROP PROCEDURE IF EXISTS `proc_apagaFabricante`;
+DELIMITER //
+CREATE PROCEDURE `proc_apagaFabricante`(
+	IN `codApaga` INT
+)
+BEGIN
+	
+	SELECT COUNT(*) INTO @existe FROM tb_fabricante WHERE id_fabricante = codApaga;
+	
+	if(@existe)
+		then
+			DELETE FROM tb_fabricante WHERE id_fabricante = codApaga;
+		ELSE
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Código inexistente";
+	END if;
+	
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_apagaFuncionario
+DROP PROCEDURE IF EXISTS `proc_apagaFuncionario`;
+DELIMITER //
+CREATE PROCEDURE `proc_apagaFuncionario`(
+	IN `codApagar` INT
+)
+BEGIN
+
+	SELECT COUNT(*) INTO @contador FROM tb_funcionarios WHERE id_funcionarios = codApagar;
+	if (@contador = 1)
+		then 
+			DELETE FROM tb_funcionarios WHERE id_funcionarios = codApagar;
+			SELECT "funcionario apagado com sucesso" AS mensagem;
+		ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Passageiro inexistente"; 
+	END if;
+	SELECT * FROM tb_funcionarios;
+	
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_apagaManutencao
+DROP PROCEDURE IF EXISTS `proc_apagaManutencao`;
+DELIMITER //
+CREATE PROCEDURE `proc_apagaManutencao`(
+	IN `codApagar` INT
+)
+BEGIN
+
+	SELECT COUNT(*) INTO @contador FROM tb_manutencao WHERE id_manutencao = codApagar;
+	if (@contador = 1)
+		then 
+			DELETE FROM tb_manutencao WHERE id_manutencao = codApagar;
+			SELECT "Manutenção apagado com sucesso" AS mensagem;
+		ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Manutenção inexistente"; 
+	END if;
+	SELECT * FROM tb_manutencao;
+
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_apagaPassageiro
+DROP PROCEDURE IF EXISTS `proc_apagaPassageiro`;
+DELIMITER //
+CREATE PROCEDURE `proc_apagaPassageiro`(
+	IN `codApagar` INT
+)
+BEGIN
+
+	SELECT COUNT(*) INTO @contador FROM tb_passageiro WHERE id_passageiro = codApagar;
+	if (@contador = 1)
+		then 
+			DELETE FROM tb_passageiro WHERE id_passageiro = codApagar;
+			SELECT "Passageiro apagado com sucesso" AS mensagem;
+		ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Passageiro inexistente"; 
+	END if;
+	SELECT * FROM tb_passageiro;
+	
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_apagaPassagem
+DROP PROCEDURE IF EXISTS `proc_apagaPassagem`;
+DELIMITER //
+CREATE PROCEDURE `proc_apagaPassagem`(
+	IN `codApagar` INT
+)
+BEGIN
+SELECT COUNT(*) INTO @contador FROM tb_passagem WHERE id_passagem = codApagar;
+	if (@contador = 1)
+		then 
+			DELETE FROM tb_passagem WHERE id_passagem = codApagar;
+			SELECT "Passagem apagada com sucesso" AS mensagem;
+		ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Passagem inexistente"; 
+	END if;
+	SELECT * FROM tb_passagem;
+
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_apagaTripulacao
+DROP PROCEDURE IF EXISTS `proc_apagaTripulacao`;
+DELIMITER //
+CREATE PROCEDURE `proc_apagaTripulacao`(
+	IN `codApagar` INT
+)
+BEGIN
+SELECT COUNT(*) INTO @contador FROM tb_tripulacao WHERE id_tripulacao = codApagar;
+	if (@contador = 1)
+		then 
+			DELETE FROM tb_tripulacao WHERE id_tripulacao = codApagar;
+			SELECT "Tripulação apagada com sucesso" AS mensagem;
+		ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Tripulação inexistente"; 
+	END if;
+	SELECT * FROM tb_tripulacao;
+
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_apagaVoos
+DROP PROCEDURE IF EXISTS `proc_apagaVoos`;
+DELIMITER //
+CREATE PROCEDURE `proc_apagaVoos`(
+	IN `codApagar` INT
+)
+BEGIN
+SELECT COUNT(*) INTO @contador FROM tb_voos WHERE id_voo = codApagar;
+	if (@contador = 1)
+		then 
+			DELETE FROM tb_passagem WHERE id_voo = codApagar;
+			SELECT "Voo apagado com sucesso" AS mensagem;
+		ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Voo inexistente"; 
+	END if;
+	SELECT * FROM tb_voos;
+
 END//
 DELIMITER ;
 
@@ -569,6 +791,92 @@ BEGIN
 END//
 DELIMITER ;
 
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_relatoriosAeroportos
+DROP PROCEDURE IF EXISTS `proc_relatoriosAeroportos`;
+DELIMITER //
+CREATE PROCEDURE `proc_relatoriosAeroportos`(
+	IN `codRelatorio` INT,
+	IN `statusAtual` VARCHAR(50)
+)
+BEGIN
+	if(codRelatorio = 1)
+		then
+			SELECT ae.codigo_iata,ae.codigo_icao,ae.statos FROM tb_aeroportos AS ae;
+		ELSE if(codRelatorio = 2)
+			then
+				SELECT ae.latitude,ae.longitude,ae.elevacao_metros,ae.tamanhoPista FROM tb_aeroportos AS ae
+				WHERE ae.statos LIKE CONCAT('%', statusAtual ,'%');
+			ELSE if(codRelatorio = 3)
+				then
+					SELECT * FROM tb_aeroportos;
+				else
+					SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Relatório não existente";
+			END if;
+		END if;
+	END if;
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_relatoriosFuncionario
+DROP PROCEDURE IF EXISTS `proc_relatoriosFuncionario`;
+DELIMITER //
+CREATE PROCEDURE `proc_relatoriosFuncionario`(
+	IN `tipoRelatorio` INT,
+	IN `nomeBusca` VARCHAR(100)
+)
+BEGIN
+
+					if (tipoRelatorio = '1' )
+					then SELECT fu.nomeFuncionario, fu.emailFuncionario, fu.telefoneFuncionario FROM tb_funcionarios AS fu ORDER BY fu.nomeFuncionario ASC;
+					
+					ELSE if (tipoRelatorio = '2' )
+					then SELECT fu.nomeFuncionario, fu.cpfFuncionario, fu.cargoFuncionario, fu.statusFuncionario, 
+					fu.tb_companhiaAerea_id FROM tb_funcionarios AS fu ORDER BY fu.nomeFuncionario ASC;
+					
+					ELSE if (tipoRelatorio = '3' )
+					then SELECT * FROM tb_funcionarios AS f WHERE nomeFuncionario LIKE CONCAT('%', nomeBusca, '%') ;
+					
+					ELSE SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Relatório inexistente"; 
+					END if;
+					END if;
+					END if;
+				
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure sistemadetransporteaereo.proc_relatoriosManutencao
+DROP PROCEDURE IF EXISTS `proc_relatoriosManutencao`;
+DELIMITER //
+CREATE PROCEDURE `proc_relatoriosManutencao`(
+	IN `codRelatorio` INT,
+	IN `manutencaoTipo` VARCHAR(100),
+	IN `dataInicial` DATE
+)
+BEGIN
+	
+	if(codRelatorio = 1)
+		then
+			SELECT m.tipoManutencao,m.descricao,m.custo,m.statos FROM tb_manutencao AS m;
+		ELSE if(codRelatorio = 2)
+			then
+				SELECT m.tipoManutencao,m.descricao,date_format(m.data_inicio, '%d%m%Y'),date_format(m.data_fim,'%d%m%Y'),m.custo FROM tb_manutencao AS m
+				WHERE m.tipoManutencao LIKE CONCAT('%', manutencaoTipo ,'%');
+			ELSE if(codRelatorio = 3)
+				then
+					SELECT * FROM tb_manutencao;
+				ELSE if(codRelatorio = 4)
+					then
+						SELECT * FROM tb_manutencao WHERE m.data_inicio LIKE CONCAT('%', dataInicial ,'%');
+					ELSE
+						SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Relatório não existente";
+				END if;
+			END if;
+		END if;
+	END if;
+	
+END//
+DELIMITER ;
+
 -- Copiando estrutura para tabela sistemadetransporteaereo.tb_aeroportos
 DROP TABLE IF EXISTS `tb_aeroportos`;
 CREATE TABLE IF NOT EXISTS `tb_aeroportos` (
@@ -589,7 +897,6 @@ CREATE TABLE IF NOT EXISTS `tb_aeroportos` (
 DROP TABLE IF EXISTS `tb_avioes`;
 CREATE TABLE IF NOT EXISTS `tb_avioes` (
   `id_aviao` int NOT NULL AUTO_INCREMENT,
-  `fabricante` varchar(100) COLLATE utf8mb3_bin NOT NULL,
   `modelo` varchar(100) COLLATE utf8mb3_bin NOT NULL,
   `anoFabricacao` date NOT NULL,
   `capacidadePassageiro` int DEFAULT NULL,
@@ -601,9 +908,11 @@ CREATE TABLE IF NOT EXISTS `tb_avioes` (
   KEY `fk_tb_avioes_tb_companhiaAerea1_idx` (`tb_companhiaAerea_id`),
   CONSTRAINT `fk_tb_avioes_tb_companhiaAerea1` FOREIGN KEY (`tb_companhiaAerea_id`) REFERENCES `tb_companhiaaerea` (`id_companhiaAerea`),
   CONSTRAINT `fk_tb_avioes_tb_montadoras` FOREIGN KEY (`tb_montadoras_id`) REFERENCES `tb_fabricante` (`id_fabricante`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- Copiando dados para a tabela sistemadetransporteaereo.tb_avioes: ~0 rows (aproximadamente)
+INSERT INTO `tb_avioes` (`id_aviao`, `modelo`, `anoFabricacao`, `capacidadePassageiro`, `capacidadeCarga`, `tb_montadoras_id`, `tb_companhiaAerea_id`) VALUES
+	(1, 'Boeing - 737 (MAX 8)', '2020-06-12', 210, 3300, 1, 1);
 
 -- Copiando estrutura para tabela sistemadetransporteaereo.tb_checkin
 DROP TABLE IF EXISTS `tb_checkin`;
@@ -629,11 +938,13 @@ CREATE TABLE IF NOT EXISTS `tb_companhiaaerea` (
   `nomeCompanhia` varchar(200) COLLATE utf8mb3_bin NOT NULL,
   `cnpj` varchar(20) COLLATE utf8mb3_bin NOT NULL,
   `emailOficial` varchar(45) COLLATE utf8mb3_bin NOT NULL,
-  `statos` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `statos` enum('Funcional','Suspenso','Falido') CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL DEFAULT 'Funcional',
   PRIMARY KEY (`id_companhiaAerea`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
--- Copiando dados para a tabela sistemadetransporteaereo.tb_companhiaaerea: ~0 rows (aproximadamente)
+-- Copiando dados para a tabela sistemadetransporteaereo.tb_companhiaaerea: ~1 rows (aproximadamente)
+INSERT INTO `tb_companhiaaerea` (`id_companhiaAerea`, `nomeCompanhia`, `cnpj`, `emailOficial`, `statos`) VALUES
+	(1, 'American Airlines', '36.212.637/0001-99', 'Restrito', 'Funcional');
 
 -- Copiando estrutura para tabela sistemadetransporteaereo.tb_fabricante
 DROP TABLE IF EXISTS `tb_fabricante`;
@@ -645,7 +956,11 @@ CREATE TABLE IF NOT EXISTS `tb_fabricante` (
   PRIMARY KEY (`id_fabricante`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
--- Copiando dados para a tabela sistemadetransporteaereo.tb_fabricante: ~0 rows (aproximadamente)
+-- Copiando dados para a tabela sistemadetransporteaereo.tb_fabricante: ~2 rows (aproximadamente)
+INSERT INTO `tb_fabricante` (`id_fabricante`, `nomeFabricante`, `paisOrigem`, `sede`) VALUES
+	(1, 'Boeing', 'EUA', 'Condado de Arlington, Virgínia'),
+	(2, 'Airbus', 'França', 'Blagnac, Região da Occitânia'),
+	(3, 'Embraer', 'Brasil', 'São José dos Campos, São Paulo');
 
 -- Copiando estrutura para tabela sistemadetransporteaereo.tb_funcionarios
 DROP TABLE IF EXISTS `tb_funcionarios`;
@@ -656,15 +971,18 @@ CREATE TABLE IF NOT EXISTS `tb_funcionarios` (
   `cargoFuncionario` varchar(50) COLLATE utf8mb3_bin NOT NULL,
   `emailFuncionario` varchar(150) COLLATE utf8mb3_bin NOT NULL,
   `telefoneFuncionario` varchar(150) COLLATE utf8mb3_bin NOT NULL,
-  `statusFuncionario` varchar(50) COLLATE utf8mb3_bin NOT NULL,
+  `statusFuncionario` enum('Ativo','Suspenso') CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL DEFAULT 'Ativo',
   `salarioFuncionario` double NOT NULL,
   `tb_companhiaAerea_id` int NOT NULL,
   PRIMARY KEY (`id_funcionarios`,`tb_companhiaAerea_id`),
   KEY `fk_tb_funcionarios_tb_companhiaAerea1_idx` (`tb_companhiaAerea_id`),
   CONSTRAINT `fk_tb_funcionarios_tb_companhiaAerea1` FOREIGN KEY (`tb_companhiaAerea_id`) REFERENCES `tb_companhiaaerea` (`id_companhiaAerea`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- Copiando dados para a tabela sistemadetransporteaereo.tb_funcionarios: ~0 rows (aproximadamente)
+INSERT INTO `tb_funcionarios` (`id_funcionarios`, `nomeFuncionario`, `cpfFuncionario`, `cargoFuncionario`, `emailFuncionario`, `telefoneFuncionario`, `statusFuncionario`, `salarioFuncionario`, `tb_companhiaAerea_id`) VALUES
+	(1, 'Aníbal Siqueira', '10988614693', 'Gerente', 'galçksjdçlgahsçdlg', 'ahgçlasdhg', 'Ativo', 2500, 1),
+	(2, 'Nicolas', 'laksdgçlah', 'Supervisor', 'alkjgçlajksd', 'çalkjsdgçalkj', 'Suspenso', 3000, 1);
 
 -- Copiando estrutura para tabela sistemadetransporteaereo.tb_manutencao
 DROP TABLE IF EXISTS `tb_manutencao`;
@@ -675,7 +993,7 @@ CREATE TABLE IF NOT EXISTS `tb_manutencao` (
   `data_inicio` date NOT NULL,
   `data_fim` date NOT NULL,
   `custo` double NOT NULL DEFAULT (0),
-  `statos` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
+  `statos` enum('Não iniciado','Em andamento','Finalizado') CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL DEFAULT 'Não iniciado',
   `tb_avioes_id` int NOT NULL,
   PRIMARY KEY (`id_manutencao`,`tb_avioes_id`),
   KEY `fk_tb_manutencao_tb_avioes1_idx` (`tb_avioes_id`),
@@ -702,6 +1020,7 @@ CREATE TABLE IF NOT EXISTS `tb_pagamento` (
 DROP TABLE IF EXISTS `tb_passageiro`;
 CREATE TABLE IF NOT EXISTS `tb_passageiro` (
   `id_passageiro` int NOT NULL AUTO_INCREMENT,
+  `idadePassageiro` int NOT NULL,
   `nomePassageiro` varchar(300) COLLATE utf8mb3_bin NOT NULL,
   `emailPassageiro` varchar(150) COLLATE utf8mb3_bin NOT NULL,
   `telefonePassageiro` varchar(150) COLLATE utf8mb3_bin NOT NULL,
@@ -794,6 +1113,97 @@ CREATE TABLE IF NOT EXISTS `tb_voos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- Copiando dados para a tabela sistemadetransporteaereo.tb_voos: ~0 rows (aproximadamente)
+
+-- Copiando estrutura para view sistemadetransporteaereo.vi_apresentacaoembarque
+DROP VIEW IF EXISTS `vi_apresentacaoembarque`;
+-- Criando tabela temporária para evitar erros de dependência de VIEW
+CREATE TABLE `vi_apresentacaoembarque` (
+	`Passageiro que embarcou` VARCHAR(300) NOT NULL COLLATE 'utf8mb3_bin',
+	`Data do check in` DATE NOT NULL,
+	`Status atual do check in` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin',
+	`Portão à embarcar` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin',
+	`Classe de embarque` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin'
+) ENGINE=MyISAM;
+
+-- Copiando estrutura para view sistemadetransporteaereo.vi_dadoscompanhia
+DROP VIEW IF EXISTS `vi_dadoscompanhia`;
+-- Criando tabela temporária para evitar erros de dependência de VIEW
+CREATE TABLE `vi_dadoscompanhia` (
+	`Nome da companhia` VARCHAR(200) NOT NULL COLLATE 'utf8mb3_bin',
+	`CNPJ da companhia` VARCHAR(20) NOT NULL COLLATE 'utf8mb3_bin',
+	`Status de funcionamento` ENUM('Funcional','Suspenso','Falido') NOT NULL COLLATE 'utf8mb3_bin',
+	`Sede principal` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin'
+) ENGINE=MyISAM;
+
+-- Copiando estrutura para view sistemadetransporteaereo.vi_dadospassagem
+DROP VIEW IF EXISTS `vi_dadospassagem`;
+-- Criando tabela temporária para evitar erros de dependência de VIEW
+CREATE TABLE `vi_dadospassagem` (
+	`nomePassageiro` VARCHAR(300) NOT NULL COLLATE 'utf8mb3_bin',
+	`precoPassagem` DOUBLE NOT NULL,
+	`destinoPassagem` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin',
+	`dataDeVoo` DATE NOT NULL,
+	`assentoPassagem` VARCHAR(10) NOT NULL COLLATE 'utf8mb3_bin',
+	`modelo` VARCHAR(100) NOT NULL COLLATE 'utf8mb3_bin',
+	`codigo_icao` CHAR(4) NOT NULL COLLATE 'utf8mb3_bin',
+	`numVoo` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin'
+) ENGINE=MyISAM;
+
+-- Copiando estrutura para view sistemadetransporteaereo.vi_funcionariosativos
+DROP VIEW IF EXISTS `vi_funcionariosativos`;
+-- Criando tabela temporária para evitar erros de dependência de VIEW
+CREATE TABLE `vi_funcionariosativos` (
+	`nomeFuncionario` VARCHAR(300) NOT NULL COLLATE 'utf8mb3_bin',
+	`cargoFuncionario` VARCHAR(50) NOT NULL COLLATE 'utf8mb3_bin',
+	`telefoneFuncionario` VARCHAR(150) NOT NULL COLLATE 'utf8mb3_bin',
+	`salarioFuncionario` DOUBLE NOT NULL
+) ENGINE=MyISAM;
+
+-- Copiando estrutura para view sistemadetransporteaereo.vi_numerovoos
+DROP VIEW IF EXISTS `vi_numerovoos`;
+-- Criando tabela temporária para evitar erros de dependência de VIEW
+CREATE TABLE `vi_numerovoos` (
+	`Fabricante` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin',
+	`Modelo` VARCHAR(100) NOT NULL COLLATE 'utf8mb3_bin',
+	`Total de Voos` BIGINT(19) NOT NULL
+) ENGINE=MyISAM;
+
+-- Copiando estrutura para view sistemadetransporteaereo.vi_statusmanutencao
+DROP VIEW IF EXISTS `vi_statusmanutencao`;
+-- Criando tabela temporária para evitar erros de dependência de VIEW
+CREATE TABLE `vi_statusmanutencao` (
+	`modelo` VARCHAR(100) NOT NULL COLLATE 'utf8mb3_bin',
+	`fabricante` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin',
+	`data_inicioManutencao` VARCHAR(10) NULL COLLATE 'utf8mb4_general_ci',
+	`data_fimManutencao` VARCHAR(10) NULL COLLATE 'utf8mb4_general_ci',
+	`tipoManutencao` VARCHAR(150) NOT NULL COLLATE 'utf8mb3_bin',
+	`descricao` MEDIUMTEXT NOT NULL COLLATE 'utf8mb3_bin',
+	`statos` ENUM('Não iniciado','Em andamento','Finalizado') NOT NULL COLLATE 'utf8mb3_bin'
+) ENGINE=MyISAM;
+
+-- Removendo tabela temporária e criando a estrutura VIEW final
+DROP TABLE IF EXISTS `vi_apresentacaoembarque`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vi_apresentacaoembarque` AS select `tbpessoa`.`nomePassageiro` AS `Passageiro que embarcou`,`tbcheck`.`data_checkIn` AS `Data do check in`,`tbcheck`.`statos` AS `Status atual do check in`,`tbcheck`.`portaoEmbarque` AS `Portão à embarcar`,`tbpass`.`classePassagem` AS `Classe de embarque` from ((`tb_checkin` `tbcheck` join `tb_passagem` `tbpass` on((`tbpass`.`id_passagem` = `tbcheck`.`tb_passagem_id`))) join `tb_passageiro` `tbpessoa` on((`tbpessoa`.`id_passageiro` = `tbpass`.`tb_passageiro_id`)));
+
+-- Removendo tabela temporária e criando a estrutura VIEW final
+DROP TABLE IF EXISTS `vi_dadoscompanhia`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vi_dadoscompanhia` AS select `tbcomp`.`nomeCompanhia` AS `Nome da companhia`,`tbcomp`.`cnpj` AS `CNPJ da companhia`,`tbcomp`.`statos` AS `Status de funcionamento`,`tbfab`.`sede` AS `Sede principal` from ((`tb_companhiaaerea` `tbcomp` join `tb_avioes` `tbav` on((`tbav`.`tb_companhiaAerea_id` = `tbcomp`.`id_companhiaAerea`))) join `tb_fabricante` `tbfab` on((`tbav`.`tb_companhiaAerea_id` = `tbfab`.`id_fabricante`)));
+
+-- Removendo tabela temporária e criando a estrutura VIEW final
+DROP TABLE IF EXISTS `vi_dadospassagem`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vi_dadospassagem` AS select `tbpessoa`.`nomePassageiro` AS `nomePassageiro`,`tbpass`.`precoPassagem` AS `precoPassagem`,`tbpass`.`destinoPassagem` AS `destinoPassagem`,`tbpass`.`dataDeVoo` AS `dataDeVoo`,`tbpass`.`assentoPassagem` AS `assentoPassagem`,`tbaviao`.`modelo` AS `modelo`,`tbaeroporto`.`codigo_icao` AS `codigo_icao`,`tbvoo`.`numVoo` AS `numVoo` from ((((`tb_passagem` `tbpass` join `tb_voos` `tbvoo` on((`tbvoo`.`id_voo` = `tbpass`.`tb_voos_id`))) join `tb_avioes` `tbaviao` on((`tbaviao`.`id_aviao` = `tbvoo`.`tb_avioes_id`))) join `tb_aeroportos` `tbaeroporto` on((`tbaeroporto`.`id_aeroporto` = `tbvoo`.`tb_aeroportos_id`))) join `tb_passageiro` `tbpessoa` on((`tbpessoa`.`id_passageiro` = `tbpass`.`tb_passageiro_id`))) order by `tbpass`.`id_passagem`;
+
+-- Removendo tabela temporária e criando a estrutura VIEW final
+DROP TABLE IF EXISTS `vi_funcionariosativos`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vi_funcionariosativos` AS select `tbfun`.`nomeFuncionario` AS `nomeFuncionario`,`tbfun`.`cargoFuncionario` AS `cargoFuncionario`,`tbfun`.`telefoneFuncionario` AS `telefoneFuncionario`,`tbfun`.`salarioFuncionario` AS `salarioFuncionario` from `tb_funcionarios` `tbfun` where (`tbfun`.`statusFuncionario` like 'Ativo');
+
+-- Removendo tabela temporária e criando a estrutura VIEW final
+DROP TABLE IF EXISTS `vi_numerovoos`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vi_numerovoos` AS select `f`.`nomeFabricante` AS `Fabricante`,`a`.`modelo` AS `Modelo`,count(`v`.`id_voo`) AS `Total de Voos` from ((`tb_avioes` `a` join `tb_fabricante` `f` on((`a`.`tb_montadoras_id` = `f`.`id_fabricante`))) join `tb_voos` `v` on((`v`.`tb_avioes_id` = `a`.`id_aviao`))) group by `a`.`modelo`,`f`.`nomeFabricante`;
+
+-- Removendo tabela temporária e criando a estrutura VIEW final
+DROP TABLE IF EXISTS `vi_statusmanutencao`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vi_statusmanutencao` AS select `a`.`modelo` AS `modelo`,`f`.`nomeFabricante` AS `fabricante`,date_format(`m`.`data_inicio`,'%d/%m/%Y') AS `data_inicioManutencao`,date_format(`m`.`data_fim`,'%d/%m/%Y') AS `data_fimManutencao`,`m`.`tipoManutencao` AS `tipoManutencao`,`m`.`descricao` AS `descricao`,`m`.`statos` AS `statos` from ((`tb_avioes` `a` join `tb_fabricante` `f` on((`a`.`tb_montadoras_id` = `f`.`id_fabricante`))) join `tb_manutencao` `m` on((`a`.`id_aviao` = `m`.`tb_avioes_id`))) order by `a`.`modelo`;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
