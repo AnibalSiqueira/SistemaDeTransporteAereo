@@ -889,9 +889,11 @@ CREATE TABLE IF NOT EXISTS `tb_aeroportos` (
   `tamanhoPista` int NOT NULL DEFAULT (0),
   `statos` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
   PRIMARY KEY (`id_aeroporto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- Copiando dados para a tabela sistemadetransporteaereo.tb_aeroportos: ~0 rows (aproximadamente)
+INSERT INTO `tb_aeroportos` (`id_aeroporto`, `codigo_iata`, `codigo_icao`, `latitude`, `longitude`, `elevacao_metros`, `tamanhoPista`, `statos`) VALUES
+	(1, 'BVB', 'SBBV', '2° 50\' 28.02" N', '-60° 41\' 14.54" W', 84, 2700, 'Ativo');
 
 -- Copiando estrutura para tabela sistemadetransporteaereo.tb_avioes
 DROP TABLE IF EXISTS `tb_avioes`;
@@ -927,9 +929,11 @@ CREATE TABLE IF NOT EXISTS `tb_checkin` (
   PRIMARY KEY (`id_checkIn`,`tb_passagem_id`),
   KEY `fk_tb_checkIn_tb_passagem1_idx` (`tb_passagem_id`),
   CONSTRAINT `fk_tb_checkIn_tb_passagem1` FOREIGN KEY (`tb_passagem_id`) REFERENCES `tb_passagem` (`id_passagem`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- Copiando dados para a tabela sistemadetransporteaereo.tb_checkin: ~0 rows (aproximadamente)
+INSERT INTO `tb_checkin` (`id_checkIn`, `data_checkIn`, `hora_checkIn`, `statos`, `observacoes`, `portaoEmbarque`, `tb_passagem_id`) VALUES
+	(1, '2025-10-30', '18:00', 'Concluido', NULL, 'A', 1);
 
 -- Copiando estrutura para tabela sistemadetransporteaereo.tb_companhiaaerea
 DROP TABLE IF EXISTS `tb_companhiaaerea`;
@@ -1012,9 +1016,11 @@ CREATE TABLE IF NOT EXISTS `tb_pagamento` (
   `validadePagamento` date NOT NULL,
   `observacao` varchar(45) COLLATE utf8mb3_bin DEFAULT NULL,
   PRIMARY KEY (`id_pagamento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- Copiando dados para a tabela sistemadetransporteaereo.tb_pagamento: ~0 rows (aproximadamente)
+INSERT INTO `tb_pagamento` (`id_pagamento`, `pagamentoFeito`, `metodoPagamento`, `quantParcelas`, `validadePagamento`, `observacao`) VALUES
+	(1, 1, 'Débito', b'1', '2025-10-30', 'Valor de 165');
 
 -- Copiando estrutura para tabela sistemadetransporteaereo.tb_passageiro
 DROP TABLE IF EXISTS `tb_passageiro`;
@@ -1025,9 +1031,11 @@ CREATE TABLE IF NOT EXISTS `tb_passageiro` (
   `emailPassageiro` varchar(150) COLLATE utf8mb3_bin NOT NULL,
   `telefonePassageiro` varchar(150) COLLATE utf8mb3_bin NOT NULL,
   PRIMARY KEY (`id_passageiro`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- Copiando dados para a tabela sistemadetransporteaereo.tb_passageiro: ~0 rows (aproximadamente)
+INSERT INTO `tb_passageiro` (`id_passageiro`, `idadePassageiro`, `nomePassageiro`, `emailPassageiro`, `telefonePassageiro`) VALUES
+	(1, 21, 'Gabriel Reis', 'seuEmail@gmail.com', '35 11111-1111');
 
 -- Copiando estrutura para tabela sistemadetransporteaereo.tb_passageirosporvoo
 DROP TABLE IF EXISTS `tb_passageirosporvoo`;
@@ -1064,9 +1072,11 @@ CREATE TABLE IF NOT EXISTS `tb_passagem` (
   CONSTRAINT `fk_tb_passagem_tb_pagamento1` FOREIGN KEY (`tb_pagamento_id`) REFERENCES `tb_pagamento` (`id_pagamento`),
   CONSTRAINT `fk_tb_passagem_tb_passageiro1` FOREIGN KEY (`tb_passageiro_id`) REFERENCES `tb_passageiro` (`id_passageiro`),
   CONSTRAINT `fk_tb_passagem_tb_voos1` FOREIGN KEY (`tb_voos_id`) REFERENCES `tb_voos` (`id_voo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- Copiando dados para a tabela sistemadetransporteaereo.tb_passagem: ~0 rows (aproximadamente)
+INSERT INTO `tb_passagem` (`id_passagem`, `numeroPassgem`, `classePassagem`, `dataDeVoo`, `destinoPassagem`, `precoPassagem`, `assentoPassagem`, `tb_voos_id`, `tb_passageiro_id`, `tb_pagamento_id`) VALUES
+	(1, '1', 'Executivo', '2025-09-30', 'Guarulhos', 165, '2B', 1, 1, 1);
 
 -- Copiando estrutura para tabela sistemadetransporteaereo.tb_tripulacao
 DROP TABLE IF EXISTS `tb_tripulacao`;
@@ -1110,16 +1120,18 @@ CREATE TABLE IF NOT EXISTS `tb_voos` (
   KEY `fk_tb_voos_tb_aeroportos1_idx` (`tb_aeroportos_id`),
   CONSTRAINT `fk_tb_voos_tb_aeroportos1` FOREIGN KEY (`tb_aeroportos_id`) REFERENCES `tb_aeroportos` (`id_aeroporto`),
   CONSTRAINT `fk_tb_voos_tb_avioes1` FOREIGN KEY (`tb_avioes_id`) REFERENCES `tb_avioes` (`id_aviao`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- Copiando dados para a tabela sistemadetransporteaereo.tb_voos: ~0 rows (aproximadamente)
+INSERT INTO `tb_voos` (`id_voo`, `numVoo`, `statusVoo`, `tb_avioes_id`, `tb_aeroportos_id`) VALUES
+	(1, '205', 'Concluido', 1, 1);
 
 -- Copiando estrutura para view sistemadetransporteaereo.vi_apresentacaoembarque
 DROP VIEW IF EXISTS `vi_apresentacaoembarque`;
 -- Criando tabela temporária para evitar erros de dependência de VIEW
 CREATE TABLE `vi_apresentacaoembarque` (
 	`Passageiro que embarcou` VARCHAR(300) NOT NULL COLLATE 'utf8mb3_bin',
-	`Data do check in` DATE NOT NULL,
+	`Data do check in` VARCHAR(10) NULL COLLATE 'utf8mb4_general_ci',
 	`Status atual do check in` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin',
 	`Portão à embarcar` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin',
 	`Classe de embarque` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin'
@@ -1139,14 +1151,14 @@ CREATE TABLE `vi_dadoscompanhia` (
 DROP VIEW IF EXISTS `vi_dadospassagem`;
 -- Criando tabela temporária para evitar erros de dependência de VIEW
 CREATE TABLE `vi_dadospassagem` (
-	`nomePassageiro` VARCHAR(300) NOT NULL COLLATE 'utf8mb3_bin',
-	`precoPassagem` DOUBLE NOT NULL,
-	`destinoPassagem` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin',
-	`dataDeVoo` DATE NOT NULL,
-	`assentoPassagem` VARCHAR(10) NOT NULL COLLATE 'utf8mb3_bin',
-	`modelo` VARCHAR(100) NOT NULL COLLATE 'utf8mb3_bin',
-	`codigo_icao` CHAR(4) NOT NULL COLLATE 'utf8mb3_bin',
-	`numVoo` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin'
+	`Nome do passageiro` VARCHAR(300) NOT NULL COLLATE 'utf8mb3_bin',
+	`Preço da passagem` DOUBLE NOT NULL,
+	`Destino do Avião` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin',
+	`Data do Voo` VARCHAR(10) NULL COLLATE 'utf8mb4_general_ci',
+	`Lugar do Passageiro` VARCHAR(10) NOT NULL COLLATE 'utf8mb3_bin',
+	`Modelo do Avião` VARCHAR(100) NOT NULL COLLATE 'utf8mb3_bin',
+	`Código identificador ICAO` CHAR(4) NOT NULL COLLATE 'utf8mb3_bin',
+	`Número do Voo` VARCHAR(45) NOT NULL COLLATE 'utf8mb3_bin'
 ) ENGINE=MyISAM;
 
 -- Copiando estrutura para view sistemadetransporteaereo.vi_funcionariosativos
@@ -1183,7 +1195,7 @@ CREATE TABLE `vi_statusmanutencao` (
 
 -- Removendo tabela temporária e criando a estrutura VIEW final
 DROP TABLE IF EXISTS `vi_apresentacaoembarque`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vi_apresentacaoembarque` AS select `tbpessoa`.`nomePassageiro` AS `Passageiro que embarcou`,`tbcheck`.`data_checkIn` AS `Data do check in`,`tbcheck`.`statos` AS `Status atual do check in`,`tbcheck`.`portaoEmbarque` AS `Portão à embarcar`,`tbpass`.`classePassagem` AS `Classe de embarque` from ((`tb_checkin` `tbcheck` join `tb_passagem` `tbpass` on((`tbpass`.`id_passagem` = `tbcheck`.`tb_passagem_id`))) join `tb_passageiro` `tbpessoa` on((`tbpessoa`.`id_passageiro` = `tbpass`.`tb_passageiro_id`)));
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vi_apresentacaoembarque` AS select `tbpessoa`.`nomePassageiro` AS `Passageiro que embarcou`,date_format(`tbcheck`.`data_checkIn`,'%d/%m/%Y') AS `Data do check in`,`tbcheck`.`statos` AS `Status atual do check in`,`tbcheck`.`portaoEmbarque` AS `Portão à embarcar`,`tbpass`.`classePassagem` AS `Classe de embarque` from ((`tb_checkin` `tbcheck` join `tb_passagem` `tbpass` on((`tbpass`.`id_passagem` = `tbcheck`.`tb_passagem_id`))) join `tb_passageiro` `tbpessoa` on((`tbpessoa`.`id_passageiro` = `tbpass`.`tb_passageiro_id`)));
 
 -- Removendo tabela temporária e criando a estrutura VIEW final
 DROP TABLE IF EXISTS `vi_dadoscompanhia`;
@@ -1191,7 +1203,7 @@ CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vi_dadoscompanhia` AS sele
 
 -- Removendo tabela temporária e criando a estrutura VIEW final
 DROP TABLE IF EXISTS `vi_dadospassagem`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vi_dadospassagem` AS select `tbpessoa`.`nomePassageiro` AS `nomePassageiro`,`tbpass`.`precoPassagem` AS `precoPassagem`,`tbpass`.`destinoPassagem` AS `destinoPassagem`,`tbpass`.`dataDeVoo` AS `dataDeVoo`,`tbpass`.`assentoPassagem` AS `assentoPassagem`,`tbaviao`.`modelo` AS `modelo`,`tbaeroporto`.`codigo_icao` AS `codigo_icao`,`tbvoo`.`numVoo` AS `numVoo` from ((((`tb_passagem` `tbpass` join `tb_voos` `tbvoo` on((`tbvoo`.`id_voo` = `tbpass`.`tb_voos_id`))) join `tb_avioes` `tbaviao` on((`tbaviao`.`id_aviao` = `tbvoo`.`tb_avioes_id`))) join `tb_aeroportos` `tbaeroporto` on((`tbaeroporto`.`id_aeroporto` = `tbvoo`.`tb_aeroportos_id`))) join `tb_passageiro` `tbpessoa` on((`tbpessoa`.`id_passageiro` = `tbpass`.`tb_passageiro_id`))) order by `tbpass`.`id_passagem`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vi_dadospassagem` AS select `tbpessoa`.`nomePassageiro` AS `Nome do passageiro`,`tbpass`.`precoPassagem` AS `Preço da passagem`,`tbpass`.`destinoPassagem` AS `Destino do Avião`,date_format(`tbpass`.`dataDeVoo`,'%d/%m/%Y') AS `Data do Voo`,`tbpass`.`assentoPassagem` AS `Lugar do Passageiro`,`tbaviao`.`modelo` AS `Modelo do Avião`,`tbaeroporto`.`codigo_icao` AS `Código identificador ICAO`,`tbvoo`.`numVoo` AS `Número do Voo` from ((((`tb_passagem` `tbpass` join `tb_voos` `tbvoo` on((`tbvoo`.`id_voo` = `tbpass`.`tb_voos_id`))) join `tb_avioes` `tbaviao` on((`tbaviao`.`id_aviao` = `tbvoo`.`tb_avioes_id`))) join `tb_aeroportos` `tbaeroporto` on((`tbaeroporto`.`id_aeroporto` = `tbvoo`.`tb_aeroportos_id`))) join `tb_passageiro` `tbpessoa` on((`tbpessoa`.`id_passageiro` = `tbpass`.`tb_passageiro_id`))) order by `tbpass`.`id_passagem`;
 
 -- Removendo tabela temporária e criando a estrutura VIEW final
 DROP TABLE IF EXISTS `vi_funcionariosativos`;
